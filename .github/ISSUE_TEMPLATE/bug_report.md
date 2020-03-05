@@ -12,3 +12,7 @@ A clear and concise description of what the problem is. Ex. I'm always frustrate
 
 **Reproduction Steps**
 The steps that are required to be performed to reproduce the issue
+
+**Assigned To**
+
+**Labels**
