@@ -5,15 +5,15 @@ import {
   ValueOrPromise,
 } from '@loopback/core';
 import {juggler} from '@loopback/repository';
-import config from './ds.datasource.config.json';
+import config from './db.datasource.config.json';
 
 @lifeCycleObserver('datasource')
-export class DsDataSource extends juggler.DataSource
+export class DbDataSource extends juggler.DataSource
   implements LifeCycleObserver {
-  static dataSourceName = 'ds';
+  static dataSourceName = 'db';
 
   constructor(
-    @inject('datasources.config.ds', {optional: true})
+    @inject('datasources.config.db', {optional: true})
     dsConfig: object = config,
   ) {
     super(dsConfig);
