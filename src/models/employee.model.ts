@@ -33,7 +33,7 @@ export class Employee extends Entity {
   email: string;
 
   @property({
-    type: Number,
+    type: 'number',
   })
   empId: string;
 

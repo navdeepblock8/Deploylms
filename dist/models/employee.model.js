@@ -52,7 +52,7 @@ __decorate([
 ], Employee.prototype, "email", void 0);
 __decorate([
     repository_1.property({
-        type: Number,
+        type: 'number',
     }),
     __metadata("design:type", String)
 ], Employee.prototype, "empId", void 0);
