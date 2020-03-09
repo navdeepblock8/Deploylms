@@ -25,18 +25,27 @@ let EmployeeController = class EmployeeController {
         this.leaveTypeRepository = leaveTypeRepository;
     }
     async create(employeeRequest) {
-        const leaveTypes = await this.leaveTypeRepository.find();
-        const filterBuilder = new repository_1.FilterBuilder();
-        const filter = filterBuilder
-            .fields("email")
-            .where({ email: employeeRequest.email }).build();
-        const emails = await this.employeeRepository.find(filter);
-        if (emails) {
-            console.log(`Error: "Employee Already Exists`);
-            throw { status: 400, message: 'Employee Already Exists' };
+        try {
+            const leaveTypes = await this.leaveTypeRepository.find();
+            const filterBuilder = new repository_1.FilterBuilder();
+            //validate employee schema
+            await models_1.Employee.validate(employeeRequest);
+            // Validate if the provided email already exists
+            const filter = filterBuilder
+                .fields("email")
+                .where({ email: employeeRequest.email }).build();
+            const email = await this.employeeRepository.findOne(filter);
+            if (email) {
+                throw new Error("Employee Already exists");
+            }
+            employeeRequest.leaves = leaveTypes;
+            const result = await this.employeeRepository.create(employeeRequest);
+            return result;
         }
-        employeeRequest.leaves = leaveTypes;
-        return this.employeeRepository.create(employeeRequest);
+        catch (err) {
+            console.log(err.toString());
+            throw { status: 400, message: err.toString() };
+        }
     }
 };
 __decorate([

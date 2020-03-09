@@ -1,7 +1,25 @@
 import {Entity, model, property} from '@loopback/repository';
+import Joi from 'joi';
 
 @model()
 export class Employee extends Entity {
+  static validate(employeeRequest: Employee) {
+    const schema = {
+      firstName: Joi.string().min(3).max(50).required(),
+      middleName: Joi.string().min(0).max(255).allow(""),
+      lastName: Joi.string().min(3).max(255).required(),
+      email: Joi.string().min(5).max(255).email(),
+      empId: Joi.number().min(1),
+      doj: Joi.string().min(5).max(255).required(),
+      gender: Joi.string().valid("male", "female", "other"),
+      status: Joi.string(),
+      role: Joi.string().min(5).max(255).required(),
+      approver: Joi.required().allow(""),
+      password: Joi.string().min(5).max(1024).required(),
+    }
+    return Joi.validate(employeeRequest, schema);
+  }
+
   @property({
     type: 'string',
     id: true,
@@ -53,6 +71,12 @@ export class Employee extends Entity {
     type: 'string',
   })
   approver?: string;
+
+  @property({
+    type: 'string',
+    default: "active"
+  })
+  status?: string;
 
   @property({
     type: 'string',

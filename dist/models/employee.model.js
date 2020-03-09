@@ -8,11 +8,31 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const repository_1 = require("@loopback/repository");
+const joi_1 = __importDefault(require("joi"));
 let Employee = class Employee extends repository_1.Entity {
     constructor(data) {
         super(data);
+    }
+    static validate(employeeRequest) {
+        const schema = {
+            firstName: joi_1.default.string().min(3).max(50).required(),
+            middleName: joi_1.default.string().min(0).max(255).allow(""),
+            lastName: joi_1.default.string().min(3).max(255).required(),
+            email: joi_1.default.string().min(5).max(255).email(),
+            empId: joi_1.default.number().min(1),
+            doj: joi_1.default.string().min(5).max(255).required(),
+            gender: joi_1.default.string().valid("male", "female", "other"),
+            status: joi_1.default.string(),
+            role: joi_1.default.string().min(5).max(255).required(),
+            approver: joi_1.default.required().allow(""),
+            password: joi_1.default.string().min(5).max(1024).required(),
+        };
+        return joi_1.default.validate(employeeRequest, schema);
     }
 };
 __decorate([
@@ -76,6 +96,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Employee.prototype, "approver", void 0);
+__decorate([
+    repository_1.property({
+        type: 'string',
+        default: "active"
+    }),
+    __metadata("design:type", String)
+], Employee.prototype, "status", void 0);
 __decorate([
     repository_1.property({
         type: 'string',
