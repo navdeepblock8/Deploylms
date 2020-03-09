@@ -14,7 +14,7 @@ export class Employee extends Entity {
       gender: Joi.string().valid("male", "female", "other"),
       status: Joi.string(),
       role: Joi.string().min(5).max(255).required(),
-      approver: Joi.required().allow(""),
+      approver: Joi.string().required(),
       password: Joi.string().min(5).max(1024).required(),
     }
     return Joi.validate(employeeRequest, schema);
@@ -69,8 +69,10 @@ export class Employee extends Entity {
 
   @property({
     type: 'string',
+    default: "",
+    required: true
   })
-  approver?: string;
+  approver: string;
 
   @property({
     type: 'string',

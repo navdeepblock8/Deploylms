@@ -5,4 +5,5 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./leave-type.model"));
 __export(require("./employee.model"));
+__export(require("./leave.model"));
 //# sourceMappingURL=index.js.map

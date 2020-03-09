@@ -10,7 +10,7 @@ export declare class Employee extends Entity {
     empId: string;
     doj: string;
     role: string;
-    approver?: string;
+    approver: string;
     status?: string;
     gender: string;
     password: string;

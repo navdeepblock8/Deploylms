@@ -1,0 +1,14 @@
+Employee 
+{
+  "firstName": "Akshay",
+  "middleName": "",
+  "lastName": "Kumar",
+  "email": "akshay.kumar@block8.com",
+  "empId": 1,
+  "doj": "09/02/1998",
+  "role": "admin",
+  "approver": "",
+  "status": "active",
+  "gender": "male",
+  "password": "string"
+}

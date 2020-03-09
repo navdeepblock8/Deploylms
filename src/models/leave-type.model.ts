@@ -37,7 +37,6 @@ export class LeaveType extends Entity {
   })
   available: number;
 
-
   constructor(data?: Partial<LeaveType>) {
     super(data);
   }

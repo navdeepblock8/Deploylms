@@ -29,7 +29,7 @@ let Employee = class Employee extends repository_1.Entity {
             gender: joi_1.default.string().valid("male", "female", "other"),
             status: joi_1.default.string(),
             role: joi_1.default.string().min(5).max(255).required(),
-            approver: joi_1.default.required().allow(""),
+            approver: joi_1.default.string().required(),
             password: joi_1.default.string().min(5).max(1024).required(),
         };
         return joi_1.default.validate(employeeRequest, schema);
@@ -93,6 +93,8 @@ __decorate([
 __decorate([
     repository_1.property({
         type: 'string',
+        default: "",
+        required: true
     }),
     __metadata("design:type", String)
 ], Employee.prototype, "approver", void 0);

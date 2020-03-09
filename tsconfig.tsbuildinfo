@@ -1374,7 +1374,7 @@
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
       },
       "./src/models/leave-type.model.ts": {
-        "version": "252768e8b0dcd26fbcab48373a0664b362829b8acfff3aebadde576d58d39bc1",
+        "version": "6aa8bd387893d91245d44ea45c6cb9eee29f6550c77c1c702245eaa689f639f2",
         "signature": "9423e940a31ea51c054f49edd8335f7fee4b2d47957076bebe4fa755b7146ac8"
       },
       "./node_modules/@types/joi/index.d.ts": {
@@ -1382,12 +1382,16 @@
         "signature": "629e989c3819bdf34ff5a3909236d2c00c276e5d84fef684114777ab7795807b"
       },
       "./src/models/employee.model.ts": {
-        "version": "c74dce4d55757215e45597e8e25c45a9d3413f02653fb1b4f21750bb92fd6661",
-        "signature": "c5b2c07b6d433b480326bdf2489a5998c86fe5eaac12ad217dcab87ab1569c24"
+        "version": "1042bcfdceb65d3fd6b4885cfb58a517997acad4a7f23dd78214f05bce584e75",
+        "signature": "89c8577c62f6cef447341376e060343d678ad019716df88c29eb74afacc13006"
+      },
+      "./src/models/leave.model.ts": {
+        "version": "4f0a0a90e3c5a6fed426f2967e1bf0e544f99b48d86960da48dc90549b63a1f6",
+        "signature": "9eab40fdb02a0fc228287e4c45f5e0db11efe13f460cb786b4344422755600d5"
       },
       "./src/models/index.ts": {
-        "version": "f029a1e6fc13a0221674c2e24bfc48eb978c9f80b237b474fc1bba341ff37c02",
-        "signature": "f029a1e6fc13a0221674c2e24bfc48eb978c9f80b237b474fc1bba341ff37c02"
+        "version": "b80ccc3e942bfa7da65d271ca603349a0f2b034520f1af22ed68674fd30191dc",
+        "signature": "b80ccc3e942bfa7da65d271ca603349a0f2b034520f1af22ed68674fd30191dc"
       },
       "./src/datasources/db.datasource.config.json": {
         "version": "d5ec82217b53cc2c95cb7e59191e6bab2fbbf042031c061924a62f57b96917c5",
@@ -1414,7 +1418,7 @@
         "signature": "dd639812322c7277ec6054174c09631020090cfb65a89309f2da58038b8fef08"
       },
       "./src/controllers/employee.controller.ts": {
-        "version": "e67df5ccea3f1b272d5b6504df2636ad05b7dae73fa205cfca164977a97f2df6",
+        "version": "ecb29299bbfb6896f9920a1626f7f1f8845fc55492646348a589e949ade36408",
         "signature": "c1400b227b98052eac8b6d11111d4e8d151a49888f5c8a91008f14bf1082249b"
       },
       "./src/controllers/ping.controller.ts": {
@@ -3801,9 +3805,15 @@
         "./node_modules/@types/node/util.d.ts",
         "./node_modules/@types/node/ts3.2/util.d.ts"
       ],
+      "./src/models/leave.model.ts": [
+        "./node_modules/@loopback/repository/index.d.ts",
+        "./node_modules/@types/node/util.d.ts",
+        "./node_modules/@types/node/ts3.2/util.d.ts"
+      ],
       "./src/models/index.ts": [
         "./src/models/leave-type.model.ts",
         "./src/models/employee.model.ts",
+        "./src/models/leave.model.ts",
         "./node_modules/@types/node/util.d.ts",
         "./node_modules/@types/node/ts3.2/util.d.ts"
       ],
@@ -6197,9 +6207,13 @@
         "./node_modules/@types/joi/index.d.ts",
         "./node_modules/@loopback/repository/index.d.ts"
       ],
+      "./src/models/leave.model.ts": [
+        "./node_modules/@loopback/repository/index.d.ts"
+      ],
       "./src/models/index.ts": [
         "./src/models/leave-type.model.ts",
-        "./src/models/employee.model.ts"
+        "./src/models/employee.model.ts",
+        "./src/models/leave.model.ts"
       ],
       "./src/datasources/db.datasource.ts": [
         "./node_modules/@loopback/core/index.d.ts",
@@ -6630,17 +6644,11 @@
       "./src/__tests__/acceptance/ping.controller.acceptance.ts",
       "./src/models/leave-type.model.ts",
       "./node_modules/@types/joi/index.d.ts",
-      "./src/models/employee.model.ts",
-      "./src/models/index.ts",
+      "./src/models/leave.model.ts",
       "./src/datasources/db.datasource.config.json",
       "./src/datasources/db.datasource.ts",
-      "./src/repositories/leave-type.repository.ts",
       "./src/datasources/index.ts",
-      "./src/repositories/employee.repository.ts",
-      "./src/repositories/index.ts",
       "./src/controllers/ping.controller.ts",
-      "./src/controllers/index.ts",
-      "./src/controllers/leave-type.controller.ts",
       "./node_modules/@types/color-name/index.d.ts",
       "./node_modules/@types/debug/index.d.ts",
       "./node_modules/@types/eslint-visitor-keys/index.d.ts",
@@ -6650,7 +6658,14 @@
       "./node_modules/@types/mocha/index.d.ts",
       "./node_modules/@types/on-finished/index.d.ts",
       "./node_modules/@types/type-is/index.d.ts",
-      "./src/controllers/employee.controller.ts"
+      "./src/models/employee.model.ts",
+      "./src/models/index.ts",
+      "./src/repositories/leave-type.repository.ts",
+      "./src/repositories/employee.repository.ts",
+      "./src/repositories/index.ts",
+      "./src/controllers/employee.controller.ts",
+      "./src/controllers/index.ts",
+      "./src/controllers/leave-type.controller.ts"
     ]
   },
   "version": "3.7.5"

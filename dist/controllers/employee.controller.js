@@ -26,7 +26,6 @@ let EmployeeController = class EmployeeController {
     }
     async create(employeeRequest) {
         try {
-            const leaveTypes = await this.leaveTypeRepository.find();
             const filterBuilder = new repository_1.FilterBuilder();
             //validate employee schema
             await models_1.Employee.validate(employeeRequest);
@@ -38,6 +37,13 @@ let EmployeeController = class EmployeeController {
             if (email) {
                 throw new Error("Employee Already exists");
             }
+            // Check if approver id is valid in case of non-admin employees
+            if (employeeRequest.role !== "admin") {
+                let approver = await this.employeeRepository.findById(employeeRequest.approver);
+                if (!approver)
+                    throw new Error('Entered approver doesn\'t exist');
+            }
+            const leaveTypes = await this.leaveTypeRepository.find();
             employeeRequest.leaves = leaveTypes;
             const result = await this.employeeRepository.create(employeeRequest);
             return result;
