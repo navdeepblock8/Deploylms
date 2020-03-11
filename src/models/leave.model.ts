@@ -1,7 +1,23 @@
 import {Entity, model, property} from '@loopback/repository';
+import Joi from 'joi';
 
 @model()
 export class Leave extends Entity {
+  static validate(leave: Leave) {
+    const schema = {
+      employeeId: Joi.string().required(),
+      approverId: Joi.string().required(),
+      startDate: Joi.date().iso().required(),
+      endDate: Joi.date().iso().required(),
+      leaveType: Joi.string().required(),
+      halfDay: Joi.boolean().required(),
+      status: Joi.string().required(),
+      message: Joi.string(),
+      description: Joi.string()
+    }
+    return Joi.validate(leave, schema);
+  }
+
   @property({
     type: 'string',
     id: true,
@@ -20,6 +36,18 @@ export class Leave extends Entity {
     required: true,
   })
   approverId: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  firstName: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  lastName: string;
 
   @property({
     type: 'string',
