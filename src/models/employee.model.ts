@@ -1,9 +1,18 @@
-import {Entity, model, property} from '@loopback/repository';
+import { Entity, model, property } from '@loopback/repository';
 import Joi from 'joi';
+import { LeaveType } from '../models';
 
 @model()
 export class Employee extends Entity {
   static validate(employeeRequest: Employee) {
+    const objectSchema = Joi.object({
+      type: Joi.string().min(1).required(),
+      total: Joi.number().required(),
+      applied: Joi.number().required(),
+      availed: Joi.number().required(),
+      available: Joi.number().required()
+    }).required();
+
     const schema = {
       firstName: Joi.string().min(3).max(50).required(),
       middleName: Joi.string().min(0).max(255).allow(""),
@@ -16,6 +25,7 @@ export class Employee extends Entity {
       role: Joi.string().min(5).max(255).required(),
       approver: Joi.string().required(),
       password: Joi.string().min(5).max(1024).required(),
+      leaves: Joi.array().items(objectSchema).min(1).unique().required()
     }
     return Joi.validate(employeeRequest, schema);
   }
@@ -92,11 +102,8 @@ export class Employee extends Entity {
   })
   password: string;
 
-  @property({
-    type: 'object',
-    required: true,
-  })
-  leaves: object;
+  @property.array(LeaveType)
+  leaves: LeaveType[];
 
   constructor(data?: Partial<Employee>) {
     super(data);
