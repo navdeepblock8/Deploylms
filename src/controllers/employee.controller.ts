@@ -1,7 +1,7 @@
 import { repository, FilterBuilder } from '@loopback/repository';
 import { EmployeeRepository } from '../repositories';
 import { LeaveTypeRepository } from '../repositories';
-import { put, param, post, requestBody, getModelSchemaRef } from '@loopback/rest';
+import { get, put, param, post, requestBody, getModelSchemaRef } from '@loopback/rest';
 import { LeaveType, Employee } from '../models';
 
 // Uncomment these imports to begin using these cool features!
@@ -39,7 +39,7 @@ export class EmployeeController {
     try {
       const leaveTypes = await this.leaveTypeRepository.find()
       employeeRequest.leaves = leaveTypes;
-      
+
       //validate employee schema
       await Employee.validate(employeeRequest);
 
@@ -59,7 +59,7 @@ export class EmployeeController {
         let approver = await this.employeeRepository.findById(employeeRequest.approver)
         if(!approver) throw new Error('Entered approver doesn\'t exist')
       }
-      
+
       const result = await this.employeeRepository.create(employeeRequest);
 
       return result;
@@ -101,4 +101,24 @@ export class EmployeeController {
       throw { status: 400, message: err.toString() }
     }
   }
+
+  @get('/employee', {
+    responses: {
+      '200': {
+        description: 'Array of Employee model instances',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'array',
+              items: getModelSchemaRef(Employee, { includeRelations: true }),
+            },
+          },
+        },
+      },
+    },
+  })
+  async find(): Promise<Employee[]> {
+    return this.employeeRepository.find();
+  }
+
 }
