@@ -121,4 +121,22 @@ export class EmployeeController {
     return this.employeeRepository.find();
   }
 
+  @get('/employee/{id}', {
+    responses: {
+      '200': {
+        description: 'Employee model instance',
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(Employee, {includeRelations: true}),
+          },
+        },
+      },
+    },
+  })
+  async findById(
+    @param.path.string('id') id: string,
+  ): Promise<Employee> {
+    return this.employeeRepository.findById(id);
+  }
+  
 }
