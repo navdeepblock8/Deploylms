@@ -21,6 +21,10 @@ import {Leave} from '../models';
 import {LeaveRepository} from '../repositories';
 import {EmployeeRepository} from '../repositories';
 
+interface LeaveUpdateRequest {
+  status: string
+}
+
 export class LeaveController {
   constructor(
     @repository(LeaveRepository)
@@ -71,7 +75,7 @@ export class LeaveController {
         'application/json': {
           schema: getModelSchemaRef(Leave, {
             title: 'NewLeave',
-            exclude: ['id', 'firstName', 'lastName'],
+            exclude: ['id', 'firstName', 'lastName', 'daysCount'],
           }),
         },
       },
@@ -107,6 +111,7 @@ export class LeaveController {
       leave.status = "pending"
       leave.firstName = employee.firstName;
       leave.lastName = employee.lastName;
+      leave.daysCount = daysCount
 
       await this.employeeRepository.update(employee);
       const savedLeave = await this.leaveRepository.create(leave);
@@ -155,28 +160,6 @@ export class LeaveController {
     return this.leaveRepository.find(filter);
   }
 
-  @patch('/leaves', {
-    responses: {
-      '200': {
-        description: 'Leave PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Leave, {partial: true}),
-        },
-      },
-    })
-    leave: Leave,
-    @param.query.object('where', getWhereSchemaFor(Leave)) where?: Where<Leave>,
-  ): Promise<Count> {
-    return this.leaveRepository.updateAll(leave, where);
-  }
-
   @get('/leaves/{id}', {
     responses: {
       '200': {
@@ -198,8 +181,14 @@ export class LeaveController {
 
   @patch('/leaves/{id}', {
     responses: {
-      '204': {
-        description: 'Leave PATCH success',
+      '200': {
+        description: 'Leave model instance',
+        content: {'application/json': {
+          schema: getModelSchemaRef(Leave, {
+          title: 'Update Status',
+          exclude: ['id'],
+        }
+        )}},
       },
     },
   })
@@ -208,37 +197,52 @@ export class LeaveController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Leave, {partial: true}),
+          schema: {
+            type: 'object',
+            properties: {
+              status: {type: 'string'}
+            }
+          },
         },
       },
-    })
-    leave: Leave,
-  ): Promise<void> {
-    await this.leaveRepository.updateById(id, leave);
+    }) leaveUpdateRequest: LeaveUpdateRequest,
+
+  ): Promise<Leave> {
+    try {
+      const leave = await this.leaveRepository.findById(id);
+      if(leave.status != "pending")
+        throw new Error("Leave has already been approved or rejected")
+      if(!leave)
+        throw new Error("Invalid leave id provided")
+
+      if(!Leave.validStatus(leaveUpdateRequest.status))
+        throw new Error("Leave status can only be approved or rejected")
+
+      const employee = await this.employeeRepository.findById(leave.employeeId);
+      if(!employee)
+        throw new Error("Employee ID mentioned in leave does not exist now")
+      const employeeLeave = employee.leaves.find(leaveItems => leaveItems.type === leave.leaveType)
+      if(employeeLeave === undefined) {
+        throw new Error("The type of leave provided during leave application no longer exists in the database")
+      }
+      if(leaveUpdateRequest.status === "approved") {
+        employeeLeave.applied -= leave.daysCount
+        employeeLeave.availed += leave.daysCount
+        leave.status = "approved"
+      } else if(leaveUpdateRequest.status === "rejected") {
+        employeeLeave.applied -= leave.daysCount
+        employeeLeave.available += leave.daysCount
+        leave.status = "rejected"
+      }
+
+      await this.employeeRepository.updateById(leave.employeeId, employee);
+      const updatedLeave = await this.leaveRepository.updateById(id, leave);
+      return leave
+    } catch(err) {
+      console.log(err.stack)
+      console.log(err.toString());
+      throw {status: 400, message: err.toString()}
+    }
   }
 
-  @put('/leaves/{id}', {
-    responses: {
-      '204': {
-        description: 'Leave PUT success',
-      },
-    },
-  })
-  async replaceById(
-    @param.path.string('id') id: string,
-    @requestBody() leave: Leave,
-  ): Promise<void> {
-    await this.leaveRepository.replaceById(id, leave);
-  }
-
-  @del('/leaves/{id}', {
-    responses: {
-      '204': {
-        description: 'Leave DELETE success',
-      },
-    },
-  })
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.leaveRepository.deleteById(id);
-  }
 }

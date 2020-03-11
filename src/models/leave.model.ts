@@ -13,9 +13,14 @@ export class Leave extends Entity {
       halfDay: Joi.boolean().required(),
       status: Joi.string().required(),
       message: Joi.string(),
-      description: Joi.string()
+      description: Joi.string(),
     }
     return Joi.validate(leave, schema);
+  }
+
+  static validStatus(leaveStatus: string) {
+    const schema = Joi.string().valid(['approved', 'rejected'])
+    return Joi.validate(leaveStatus, schema);
   }
 
   @property({
@@ -60,6 +65,12 @@ export class Leave extends Entity {
     required: true,
   })
   endDate: string;
+
+  @property({
+    type: 'number',
+    required: true,
+  })
+  daysCount: number;
 
   @property({
     type: 'string',
