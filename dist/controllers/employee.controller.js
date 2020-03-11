@@ -53,9 +53,6 @@ let EmployeeController = class EmployeeController {
             throw { status: 400, message: err.toString() };
         }
     }
-    async replaceById(id, employee) {
-        await this.employeeRepository.replaceById(id, employee);
-    }
 };
 __decorate([
     rest_1.post('/employee', {
@@ -79,28 +76,6 @@ __decorate([
     __metadata("design:paramtypes", [models_1.Employee]),
     __metadata("design:returntype", Promise)
 ], EmployeeController.prototype, "create", null);
-__decorate([
-    rest_1.put('/employee/{id}', {
-        responses: {
-            '204': {
-                description: 'Employee PUT success',
-            },
-        },
-    }),
-    __param(0, rest_1.param.path.string('id')),
-    __param(1, rest_1.requestBody({
-        content: {
-            'application/json': {
-                schema: rest_1.getModelSchemaRef(models_1.Employee, {
-                    exclude: ['id'],
-                }),
-            },
-        },
-    })),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, models_1.Employee]),
-    __metadata("design:returntype", Promise)
-], EmployeeController.prototype, "replaceById", null);
 EmployeeController = __decorate([
     __param(0, repository_1.repository(repositories_1.EmployeeRepository)),
     __param(1, repository_1.repository(repositories_2.LeaveTypeRepository)),
