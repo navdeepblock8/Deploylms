@@ -4,6 +4,7 @@ import {
   Filter,
   repository,
   Where,
+  FilterBuilder,
 } from '@loopback/repository';
 import {
   post,
@@ -160,23 +161,80 @@ export class LeaveController {
     return this.leaveRepository.find(filter);
   }
 
-  @get('/leaves/{id}', {
+  @get('/leaves/employee/{employeeId}/{status}', {
     responses: {
       '200': {
-        description: 'Leave model instance',
+        description: 'Array of Leave model instances',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Leave, {includeRelations: true}),
+            schema: {
+              type: 'array',
+              items: getModelSchemaRef(Leave, {includeRelations: true}),
+            },
           },
         },
       },
     },
   })
-  async findById(
-    @param.path.string('id') id: string,
-    @param.query.object('filter', getFilterSchemaFor(Leave)) filter?: Filter<Leave>
-  ): Promise<Leave> {
-    return this.leaveRepository.findById(id, filter);
+  async findEmployeeLeaves(
+    @param.path.string('employeeId') employeeId: string,
+    @param.path.string('status') status: string
+  ): Promise<Leave[]> {
+    try {
+      const employee = await this.employeeRepository.findById(employeeId);
+      if(!employee)
+        throw new Error("Employee with given employee id not found")
+
+      if(status === "pending" || status === "rejected" || status === "approved") {  
+        const leaves = await this.leaveRepository.find({ where: { employeeId: { like: employeeId }, status: status } })
+        return leaves
+      } else {
+        const leaves = await this.leaveRepository.find({ where: { employeeId: { like: employeeId } } })
+        return leaves
+      }
+    } catch(err) {
+      console.log(err.stack)
+      console.log(err.toString());
+      throw {status: 400, message: err.toString()}
+    }
+  }
+
+  @get('/leaves/approver/{employeeId}/{status}', {
+    responses: {
+      '200': {
+        description: 'Array of Leave model instances',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'array',
+              items: getModelSchemaRef(Leave, {includeRelations: true}),
+            },
+          },
+        },
+      },
+    },
+  })
+  async findApproverLeaves(
+    @param.path.string('employeeId') employeeId: string,
+    @param.path.string('status') status: string
+  ): Promise<Leave[]> {
+    try {
+      const employee = await this.employeeRepository.findById(employeeId);
+      if(!employee)
+        throw new Error("Employee with given employee id not found")
+
+        if(status === "pending" || status === "rejected" || status === "approved") {  
+        const leaves = await this.leaveRepository.find({ where: { approverId: { like: employeeId }, status: status } })
+        return leaves
+      } else {
+        const leaves = await this.leaveRepository.find({ where: { approverId: { like: employeeId } } })
+        return leaves
+      }
+    } catch(err) {
+      console.log(err.stack)
+      console.log(err.toString());
+      throw {status: 400, message: err.toString()}
+    }
   }
 
   @patch('/leaves/{id}', {
