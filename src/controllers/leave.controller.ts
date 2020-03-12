@@ -273,8 +273,7 @@ export class LeaveController {
       if(!leave)
         throw new Error("Invalid leave id provided")
 
-      if(!Leave.validStatus(leaveUpdateRequest.status))
-        throw new Error("Leave status can only be approved or rejected")
+      await Leave.validStatus(leaveUpdateRequest.status)
 
       const employee = await this.employeeRepository.findById(leave.employeeId);
       if(!employee)

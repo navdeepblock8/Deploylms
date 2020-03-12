@@ -23,7 +23,7 @@ export class Employee extends Entity {
       gender: Joi.string().valid("male", "female", "other"),
       status: Joi.string(),
       role: Joi.string().min(5).max(255).required(),
-      approver: Joi.string().required(),
+      approver: Joi.string().required().allow(""),
       password: Joi.string().min(5).max(1024).required(),
       leaves: Joi.array().items(objectSchema).min(1).unique().required()
     }
