@@ -44,9 +44,21 @@ export class LeaveTypeController {
         },
       },
     })
-    leaveType: LeaveType,
+    leaveTypeRequest: LeaveType,
   ): Promise<LeaveType> {
-    return this.leaveTypeRepository.create(leaveType);
+    try {
+      await LeaveType.validate(leaveTypeRequest);
+      if(leaveTypeRequest.available + leaveTypeRequest.applied + leaveTypeRequest.availed != leaveTypeRequest.total)
+        throw new Error("Sum of Available, Applied and Availed leaves should be equal to Total")
+      const leaveType = await this.leaveTypeRepository.find({ where: { type: leaveTypeRequest.type } } )
+      if(leaveType)
+        throw new Error("Leave Type Already exists")
+      return this.leaveTypeRepository.create(leaveTypeRequest);
+    } catch (err) {
+      console.log(err.stack)
+      console.log(err.toString());
+      throw { status: 400, message: err.toString() }
+    }
   }
 
   @get('/leave-types/count', {
