@@ -3,6 +3,7 @@ import { EmployeeRepository } from '../repositories';
 import { LeaveTypeRepository } from '../repositories';
 import { get, put, param, post, requestBody, getModelSchemaRef } from '@loopback/rest';
 import { LeaveType, Employee } from '../models';
+import {emailEmpPostEmp,emailEmpPostApp} from '../utils/email';
 
 // Uncomment these imports to begin using these cool features!
 
@@ -61,6 +62,12 @@ export class EmployeeController {
       }
 
       const result = await this.employeeRepository.create(employeeRequest);
+
+      //Code for Email sending
+      const responseEmp = await emailEmpPostEmp(employeeRequest.email,employeeRequest.firstName,employeeRequest.password);
+      const responseApp = await emailEmpPostApp(employeeRequest.approver,employeeRequest.firstName,employeeRequest.email);
+      console.log('Employee email res:', responseEmp);
+      console.log('Approver email res:', responseApp);
 
       return result;
     } catch (err) {
