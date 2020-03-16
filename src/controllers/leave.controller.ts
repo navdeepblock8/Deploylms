@@ -60,7 +60,10 @@ export class LeaveController {
     }
     return count;
   }
-
+  
+  testFunction = () => {
+    throw new Error("New Error 101")
+  }
 
   @post('/leaves', {
     responses: {
@@ -84,6 +87,7 @@ export class LeaveController {
     leave: Omit<Leave, 'id & firstName & lastName'>,
   ): Promise<Leave> {
     try {
+      this.testFunction();
       console.log(leave)
       await Leave.validate(leave)
       const employee = await this.employeeRepository.findById(leave.employeeId)

@@ -50,7 +50,7 @@ export class LeaveTypeController {
       await LeaveType.validate(leaveTypeRequest);
       if(leaveTypeRequest.available + leaveTypeRequest.applied + leaveTypeRequest.availed != leaveTypeRequest.total)
         throw new Error("Sum of Available, Applied and Availed leaves should be equal to Total")
-      const leaveType = await this.leaveTypeRepository.find({ where: { type: leaveTypeRequest.type } } )
+      const leaveType = await this.leaveTypeRepository.findOne({ where: { type: leaveTypeRequest.type } } )
       if(leaveType)
         throw new Error("Leave Type Already exists")
       return this.leaveTypeRepository.create(leaveTypeRequest);
